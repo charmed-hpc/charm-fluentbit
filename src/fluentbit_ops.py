@@ -54,7 +54,7 @@ class FluentbitOps:
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Installing fluentbit")
-            cmd = f"apt-get install --yes td-agent-bit"
+            cmd = "apt-get install --yes td-agent-bit"
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Fluentbit installed")
@@ -81,7 +81,7 @@ class FluentbitOps:
 
         try:
             logger.debug("## Installing fluentbit")
-            cmd = f"yum install --assumeyes td-agent-bit"
+            cmd = "yum install --assumeyes td-agent-bit"
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Fluentbit installed")
@@ -142,19 +142,19 @@ class FluentbitOps:
             logger.error(f"## Unsupported operating system: {os_}")
 
     def _uninstall_on_ubuntu(self):
-        logger.debug(f"## Removing fluentbit package")
+        logger.debug("## Removing fluentbit package")
         cmd = "apt-get purge --yes td-agent-bit"
         subprocess.check_output(shlex.split(cmd))
 
-        logger.debug(f"## Removing fluentbit repository")
+        logger.debug("## Removing fluentbit repository")
         repo = "deb https://packages.fluentbit.io/ubuntu/focal focal main"
         cmd = f'add-apt-repository --remove "{repo}"'
         subprocess.check_output(shlex.split(cmd))
 
     def _uninstall_on_centos(self):
-        logger.debug(f"## Removing fluentbit package")
-        cmd = f"yum remove --assumeyes td-agent-bit"
+        logger.debug("## Removing fluentbit package")
+        cmd = "yum remove --assumeyes td-agent-bit"
         subprocess.check_output(shlex.split(cmd))
 
-        logger.debug(f"## Removing fluentbit repository")
+        logger.debug("## Removing fluentbit repository")
         Path("/etc/yum.repos.d/td-agent-bit.repo").unlink()

@@ -1,0 +1,50 @@
+name: Lint
+
+on: pull_request
+
+jobs:
+    lint-charm:
+        name: "Run linter"
+        runs-on: "ubuntu-latest"
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: '3.6'
+                  architecture: 'x64'
+            - name: "Install flake8 and flake8-docstrings"
+              run: |
+                  pip install -r requirements-dev.txt
+
+            - name: "lint the charms"
+              run: |
+                  make lint
+
+    build-charm:
+        name: "Build the charms"
+        needs: lint-charm
+        runs-on: "ubuntu-latest"
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+            - name: "Install charmcraft"
+              run: |
+                  sudo snap install charmcraft --channel=latest/stable --classic
+            - name: "Install lxd"
+              run: |
+                  sudo snap install lxd --channel=latest/stable
+                  sudo snap refresh lxd
+            - name: "Configure lxd"
+              run: |
+                  sudo groupadd --force --system lxd
+                  sudo usermod --append --groups lxd $USER
+                  newgrp lxd
+                  sudo snap start lxd
+                  sudo lxd waitready --timeout=30
+                  sudo lxd init --auto
+            - name: "Build the charms"
+              shell: bash
+              run: |
+                  make charm
+                  echo "charm version: $(cat version)"

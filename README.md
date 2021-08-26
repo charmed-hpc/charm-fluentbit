@@ -1,14 +1,32 @@
 # Fluentbit Charmed Operator
 
-Charmed Operator for [Fluentbit](https://fluentbit.io).
+Charmed Operator for [Fluentbit](https://fluentbit.io). This subordinate charm
+allows to forward logs to a centralized service.
 
 ## Quickstart
 
-TODO
+To deploy Fluentbit and forward logs from your Juju Application:
+
+```bash
+$ juju deploy fluentbit
+$ juju relate fluentbit my-application
+```
 
 ## Developing
 
-TODO
+The code follows PEP8 and PEP257. The supplied `Makefile` allows one to easily
+lint and build the charm:
+
+```bash
+$ make lint
+$ make charm
+```
+
+To deploy the locally built charm:
+
+```bash
+$ juju deploy ./fluentbit_ubuntu-20.04-amd64_centos-7-amd64.charm
+```
 
 ## Contact
 

@@ -1,5 +1,5 @@
 [flake8]
 exclude = .git,__pycache__
 max-line-length = 99
-docstring-convention=pep257
+docstring-convention = google
 ignore = D202,D413

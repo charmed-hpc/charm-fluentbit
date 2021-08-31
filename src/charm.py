@@ -49,7 +49,6 @@ class FluentbitCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Error installing Fluentbit")
             event.defer()
-            return
 
     def _on_upgrade_charm(self, event):
         """Perform charm upgrade operations."""

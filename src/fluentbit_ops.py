@@ -135,9 +135,9 @@ class FluentbitOps:
         """
         os_ = operating_system()
         if "ubuntu" == os_[0]:
-            return self._uninstall_on_ubuntu()
+            self._uninstall_on_ubuntu()
         elif "centos" == os_[0]:
-            return self._uninstall_on_centos()
+            self._uninstall_on_centos()
         else:
             logger.error(f"## Unsupported operating system: {os_}")
 

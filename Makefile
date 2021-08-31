@@ -5,7 +5,7 @@ help:
 
 .PHONY: lint
 lint: ## Run linter
-	flake8 src/
+	flake8 src/ lib/
 
 .PHONY: version
 version: ## Create/update version file

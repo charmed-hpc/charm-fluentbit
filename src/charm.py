@@ -10,6 +10,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from fluentbit_ops import FluentbitOps
+from charms.fluentbit.v0.fluentbit import FluentbitProvides
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class FluentbitCharm(CharmBase):
         super().__init__(*args)
 
         self._fluentbit = FluentbitOps()
+        self._fluentbit_provides = FluentbitProvides()
 
         self._stored.set_default(installed=False)
 
@@ -36,6 +38,8 @@ class FluentbitCharm(CharmBase):
         self.framework.observe(self.on.stop, self._on_stop)
         self.framework.observe(self.on.remove, self._on_remove)
         self.framework.observe(self.on.update_status, self._on_update_status)
+
+        # TODO handle fluentbit relation event and configure and restart it
 
     def _on_install(self, event):
         logger.debug("## Installing charm")

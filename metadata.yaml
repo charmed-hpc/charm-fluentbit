@@ -1,7 +1,7 @@
 name: fluentbit
 description: >
     Fluentbit machine charm.
-summary: |
+summary: >
     Fluentbit is a high-performance log processor and forwarder.
 maintainers:
     - Heitor de Bittencourt <heitorpbittencourt@gmail.com>
@@ -12,4 +12,9 @@ subordinate: true
 requires:
     juju-info:
         interface: juju-info
+        scope: container
+
+provides:
+    fluentbit:
+        interface: fluentbit
         scope: container

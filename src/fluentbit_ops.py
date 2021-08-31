@@ -120,7 +120,7 @@ class FluentbitOps:
             return False
 
     def stop(self):
-        """Stop and disable the fluebtbit service."""
+        """Stop and disable the fluentbit service."""
         logger.debug(f"## Stoping {self._systemd_service}")
         try:
             cmd = f"systemctl disable --now {self._systemd_service}"

@@ -3,12 +3,6 @@
 from pathlib import Path
 from typing import Tuple
 
-OS_RELEASE = Path("/etc/os-release").read_text().split("\n")
-OS_RELEASE_CTXT = {
-    k: v.strip("\"")
-    for k, v in [item.split("=") for item in OS_RELEASE if item != '']
-}
-
 
 def operating_system() -> Tuple[str, str]:
     """Return what operating system we are running.
@@ -18,6 +12,10 @@ def operating_system() -> Tuple[str, str]:
         second is the version. Examples: ``('ubuntu', '20.04')``,
         ``('centos', '7')``.
     """
-    id_ = OS_RELEASE_CTXT["ID"]
-    version = OS_RELEASE_CTXT.get("VERSION_ID", "")
+    os_release = Path("/etc/os-release").read_text().split("\n")
+    os_release_ctxt = {k: v.strip("\"")
+                       for k, v in [item.split("=") for item in os_release if item != '']}
+
+    id_ = os_release_ctxt["ID"]
+    version = os_release_ctxt.get("VERSION_ID", "")
     return (id_, version)

@@ -40,6 +40,7 @@ class FluentbitCharm(CharmBase):
         self.framework.observe(self.on.update_status, self._on_update_status)
 
         # TODO handle fluentbit relation event and configure and restart it
+        self.framework.observe(self._fluentbit_provides.on.configuration_changed, self._on_config_changed)
 
     def _on_install(self, event):
         logger.debug("## Installing charm")
@@ -67,10 +68,12 @@ class FluentbitCharm(CharmBase):
         """Handle configuration updates."""
         logger.debug("## TODO Configuring charm")
         # TODO
-        #   - assemble basic config
-        #   - assemble input, parsers
-        #   - assemble outputs
+        #   - assemble charm config
+        #   - assemble input, parsers, outputs
+        #   - assemble parsers
         #   - restart daemon
+        cfg = self.fluentbit_provides.configuration
+        self._fluentbit.configure(cfg)
         self._check_status()
 
     def _on_start(self, event):

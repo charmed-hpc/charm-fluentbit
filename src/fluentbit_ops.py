@@ -5,6 +5,9 @@ import shlex
 import subprocess
 import shutil
 from pathlib import Path
+from typing import List
+
+from jinja2 import Environment, FileSystemLoader
 
 from utils import operating_system
 
@@ -20,6 +23,7 @@ class FluentbitOps:
 
         self._template_dir = Path(__file__).parent.parent / "templates"
         self._systemd_service = "td-agent-bit.service"
+        self._config_path = Path("/etc/td-agent-bit")
 
     def install(self) -> bool:
         """Install fluentbit on the machine.
@@ -158,3 +162,43 @@ class FluentbitOps:
 
         logger.debug("## Removing fluentbit repository")
         Path("/etc/yum.repos.d/td-agent-bit.repo").unlink()
+
+    def configure(self, cfg: List[dict]):
+        """Configure Fluentbit and restart service."""
+        logger.debug("## Configurting fluentbit")
+
+        ctxt = {"inputs": list(),
+                "filters": list(),
+                "outputs": list(),
+                "parsers": list(),
+                "multiline_parsers": list()}
+
+        # separate input, output, and filter from parser and parser_multiline
+        for entry in cfg:
+            if entry.keys[0].lower() == "input":
+                ctxt["inputs"].append(entry["input"])
+            elif entry.keys[0].lower() == "filter":
+                ctxt["filters"].append(entry["filter"])
+            elif entry.keys[0].lower() == "output":
+                ctxt["outputs"].append(entry["output"])
+            elif entry.keys[0].lower() == "parser":
+                ctxt["parsers"].append(entry["parser"])
+            elif entry.keys[0].lower() == "multiline_parser":
+                ctxt["multiline_parsers"].append(entry["multiline_parser"])
+
+        self._render_configs(ctxt)
+        self.restart()
+
+    def _render_configs(self, context):
+        """Render the configuration files."""
+        environment = Environment(loader=FileSystemLoader(self._template_dir))
+
+        config = self._config_path / "td-agent-bit.conf"
+        logger.debug(f"## Redering {config}")
+        template = environment.get_template("td-agent-bit.conf.tmpl")
+        config.write_text(template.render(context))
+
+        parsers = self._config_path / "parsers.conf"
+        logger.debug(f"## Redering {parsers}")
+        template = environment.get_template("parsers.conf.tmpl")
+        parsers.write_text(template.render(context))

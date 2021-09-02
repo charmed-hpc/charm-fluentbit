@@ -23,7 +23,8 @@ import logging
 import json
 from typing import List
 
-from ops.relation import ConsumerBase, EventBase, EventSource, ObjectEvents, ProviderBase
+from ops.framework import EventBase, EventSource, ObjectEvents, StoredState
+from ops.relation import ConsumerBase, ProviderBase
 
 # The unique Charmhub library identifier, never change it
 LIBID = "e7b5ae1460034b9fb67cd4ec6aa3e87f"
@@ -79,12 +80,15 @@ class FluentbitProvides(ProviderBase):
 
         events = self.charm.on[relation_name]
         self.framework.observe(events.relation_changed, self._on_relation_changed)
-        # TODO relation_broken should reconfigure with empty/default values
+        # TODO relation_broken should reconfigure with empty/default values,
+        #      with care to not remove other entries from other relations
 
     def _on_relation_changed(self, event):
         """Get configuration from the client and trigger a reconfiguration."""
         cfg = event.relation.data[event.unit].get("configuration")
         logger.debug(f"## relation-changed: received: {cfg}")
+        # TODO this only works for 1 relation, should extend for any number of
+        #      relations, so it can support multiple outputs easily
         if cfg:
             self._state.cfg = json.loads(cfg)
             self.on.configuration_available.emit()

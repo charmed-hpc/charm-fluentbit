@@ -1,2 +1,3 @@
-ops >= 1.2.0
+# This charm needs ops > 1.2, not released yet, so ping the last commit
+git+git://github.com/canonical/operator.git@3d0c36479109214dbe737f4ce8388e870a09e34b#egg=ops
 jinja2

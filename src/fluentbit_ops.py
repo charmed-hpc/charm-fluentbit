@@ -198,7 +198,7 @@ class FluentbitOps:
         template = environment.get_template("td-agent-bit.conf.tmpl")
         config.write_text(template.render(context))
 
-        parsers = self._config_path / "parsers.conf"
+        parsers = self._config_path / "charm-parsers.conf"
         logger.debug(f"## Redering {parsers}")
         template = environment.get_template("parsers.conf.tmpl")
         parsers.write_text(template.render(context))

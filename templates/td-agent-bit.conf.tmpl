@@ -87,33 +87,54 @@
 
 
 # inputs, filters, and outputs
+#[INPUT]
+#    name     tail
+#    path     /var/log/slurm/slurmd.log
+#    path_key filename
+#    tag      slurmd
+#    parser   slurm
+#
+#[OUTPUT]
+#    Name                   gelf
+#    Match                  slurmd
+#    Host                   10.220.130.119
+#    Port                   12201
+#    Mode                   udp
+#    Gelf_Short_Message_Key message
+#
+#
+#[INPUT]
+#    name             tail
+#    path             /var/log/nhc.log
+#    path_key         filename
+#    tag              nhc
+#    multiline.parser nhc
+#
+#[OUTPUT]
+#    Name                    gelf
+#    Match                   nhc
+#    Host                    10.220.130.119
+#    Port                    12201
+#    Mode                    udp
+#    Gelf_Short_Message_Key  log
+
+{% for input in inputs %}
 [INPUT]
-    name     tail
-    path     /var/log/slurm/slurmd.log
-    path_key filename
-    tag      slurmd
-    parser   slurm
+    {% for key, value in input.items() %}
+    {{key}}  {{value}}
+    {%- endfor %}
+{%- endfor %}
 
+{% for filter in filters %}
+[FILTER]
+    {% for key, value in filter.items() %}
+    {{key}}  {{value}}
+    {%- endfor %}
+{%- endfor %}
+
+{% for output in outputs %}
 [OUTPUT]
-    Name                   gelf
-    Match                  slurmd
-    Host                   10.220.130.119
-    Port                   12201
-    Mode                   udp
-    Gelf_Short_Message_Key message
-
-
-[INPUT]
-    name             tail
-    path             /var/log/nhc.log
-    path_key         filename
-    tag              nhc
-    multiline.parser nhc
-
-[OUTPUT]
-    Name                    gelf
-    Match                   nhc
-    Host                    10.220.130.119
-    Port                    12201
-    Mode                    udp
-    Gelf_Short_Message_Key  log
+    {% for key, value in output.items() %}
+    {{key}}  {{value}}
+    {%- endfor %}
+{%- endfor %}

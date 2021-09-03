@@ -49,7 +49,7 @@ class FluentbitEvents(ObjectEvents):
     configuration_available = EventSource(FluentbitConfigurationAvailable)
 
 
-class FluentbitProvides(ProviderBase):
+class FluentbitProvider(ProviderBase):
     """Implement the provider side of the relation."""
 
     _state = StoredState()
@@ -96,7 +96,9 @@ class FluentbitProvides(ProviderBase):
     @property
     def configuration(self) -> List[dict]:
         """Get the stored configuration."""
-        return self._stored.cfg.copy()
+        cfg = list(self._state.cfg).copy()
+        logger.debug(f"## Fluentbit stored configuration: {cfg}")
+        return cfg
 
 
 class FluentbitClient(ConsumerBase):

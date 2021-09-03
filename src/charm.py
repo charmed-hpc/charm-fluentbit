@@ -10,9 +10,10 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from fluentbit_ops import FluentbitOps
-from charms.fluentbit.v0.fluentbit import FluentbitProvides
+from charms.fluentbit.v0.fluentbit import FluentbitProvider
 
 logger = logging.getLogger(__name__)
+VERSION = Path("version").read_text().strip()
 
 
 class FluentbitCharm(CharmBase):
@@ -26,7 +27,7 @@ class FluentbitCharm(CharmBase):
         super().__init__(*args)
 
         self._fluentbit = FluentbitOps()
-        self._fluentbit_provides = FluentbitProvides()
+        self._fluentbit_provider = FluentbitProvider(self, "fluentbit", "fluentbit", VERSION)
 
         self._stored.set_default(installed=False)
 
@@ -40,13 +41,14 @@ class FluentbitCharm(CharmBase):
         self.framework.observe(self.on.update_status, self._on_update_status)
 
         # TODO handle fluentbit relation event and configure and restart it
-        self.framework.observe(self._fluentbit_provides.on.configuration_changed, self._on_config_changed)
+        self.framework.observe(self._fluentbit_provider.on.configuration_available,
+                               self._on_config_changed)
 
     def _on_install(self, event):
         logger.debug("## Installing charm")
         self.unit.status = MaintenanceStatus("Installing Fluentbit")
         if self.model.unit.is_leader():
-            self.unit.set_workload_version(Path("version").read_text().strip())
+            self.unit.set_workload_version(VERSION)
 
         if self._fluentbit.install():
             self.unit.status = ActiveStatus("Fluentbit installed")
@@ -60,7 +62,7 @@ class FluentbitCharm(CharmBase):
         logger.debug("## Upgrading charm")
         self.unit.status = MaintenanceStatus("Upgrading Fluentbit")
         if self.model.unit.is_leader():
-            self.unit.set_workload_version(Path("version").read_text().strip())
+            self.unit.set_workload_version(VERSION)
 
         self.unit.status = ActiveStatus("Fluentbit upgraded")
 
@@ -72,7 +74,7 @@ class FluentbitCharm(CharmBase):
         #   - assemble input, parsers, outputs
         #   - assemble parsers
         #   - restart daemon
-        cfg = self.fluentbit_provides.configuration
+        cfg = self._fluentbit_provider.configuration
         self._fluentbit.configure(cfg)
         self._check_status()
 

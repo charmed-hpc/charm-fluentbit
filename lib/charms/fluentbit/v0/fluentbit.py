@@ -1,22 +1,9 @@
-"""TODO: Add a proper docstring here.
+"""Fluentbit charm libraries.
 
-This is a placeholder docstring for this charm library. Docstrings are
-presented on Charmhub and updated whenever you push a new version of the
-library.
+To ship logs from your charm to a centralized place using Fluentbit,
+instantiate the `FluentbitClient()` class and relate your charm to Fluentbit
+charm.
 
-Complete documentation about creating and documenting libraries can be found
-in the SDK docs at https://juju.is/docs/sdk/libraries.
-
-See `charmcraft publish-lib` and `charmcraft fetch-lib` for details of how to
-share and consume charm libraries. They serve to enhance collaboration
-between charmers. Use a charmer's libraries for classes that handle
-integration with their charm.
-
-Bear in mind that new revisions of the different major API versions (v0, v1,
-v2 etc) are maintained independently.  You can continue to update v0 and v1
-after you have pushed v3.
-
-Markdown is supported, following the CommonMark specification.
 """
 
 import logging
@@ -98,6 +85,9 @@ class FluentbitClient(Object):
 
     This class implements the `requires` end of the relation, to configure
     Fluentbit.
+
+    The instantiating class must handle the `relation_created` event to
+    configure Fluentbit:
     """
     def __init__(self, charm, relation_name: str):
         """Initialize Fluentbit client.

@@ -27,7 +27,7 @@ class FluentbitCharm(CharmBase):
         super().__init__(*args)
 
         self._fluentbit = FluentbitOps()
-        self._fluentbit_provider = FluentbitProvider(self, "fluentbit", "fluentbit", VERSION)
+        self._fluentbit_provider = FluentbitProvider(self, "fluentbit")
 
         self._stored.set_default(installed=False)
 

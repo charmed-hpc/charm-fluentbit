@@ -23,8 +23,7 @@ import logging
 import json
 from typing import List
 
-from ops.framework import EventBase, EventSource, ObjectEvents, StoredState
-from ops.relation import ConsumerBase, ProviderBase
+from ops.framework import EventBase, EventSource, Object, ObjectEvents, StoredState
 
 # The unique Charmhub library identifier, never change it
 LIBID = "e7b5ae1460034b9fb67cd4ec6aa3e87f"
@@ -49,13 +48,13 @@ class FluentbitEvents(ObjectEvents):
     configuration_available = EventSource(FluentbitConfigurationAvailable)
 
 
-class FluentbitProvider(ProviderBase):
+class FluentbitProvider(Object):
     """Implement the provider side of the relation."""
 
     _state = StoredState()
     on = FluentbitEvents()
 
-    def __init__(self, charm, relation_name: str, service: str, version: str):
+    def __init__(self, charm, relation_name: str):
         """Initialize the service provider.
 
         Arguments:
@@ -63,15 +62,8 @@ class FluentbitProvider(ProviderBase):
                    Fluentbit service.
             relation_name: string name of the relation that provides the
                            Fluentbit logging service.
-            service: string name of service provided. This is used by
-                     `FluentbitClient` to validate this service as acceptable.
-                     Hence the string name must match one of the acceptable
-                     service names in the `FluentbitClient`s `consumes`
-                     argument. Typically this string is just "fluentbit".
-            version: a string providing the semantic version of the Fluentbit
-                     application being provided.
         """
-        super().__init__(charm, relation_name, service, version)
+        super().__init__(charm, relation_name)
 
         self.charm = charm
         self._relation_name = relation_name
@@ -101,13 +93,13 @@ class FluentbitProvider(ProviderBase):
         return cfg
 
 
-class FluentbitClient(ConsumerBase):
+class FluentbitClient(Object):
     """A client to relate to a Fluentbit Charm.
 
     This class implements the `requires` end of the relation, to configure
     Fluentbit.
     """
-    def __init__(self, charm, relation_name: str, consumes: str, multi: bool = False):
+    def __init__(self, charm, relation_name: str):
         """Initialize Fluentbit client.
 
         Arguments:
@@ -115,14 +107,8 @@ class FluentbitClient(ConsumerBase):
                    object. Typically this is `self` in the instantiating class.
             relation_name: string name of the relation between `charm` and the
                            Fluentbit charmed service.
-            consumes: a dictionary of acceptable logging service providers. The
-                      keys of the dictionary are string names of logging
-                      service providers. For Fluentbit, this is typically
-                      "fluentbit". The values of the dictionary are
-                      corresponding minimal acceptable semantic version
-                      specfications for the logging service.
         """
-        super().__init__(charm, relation_name, consumes, multi)
+        super().__init__(charm, relation_name)
 
         self._charm = charm
         self._relation_name = relation_name

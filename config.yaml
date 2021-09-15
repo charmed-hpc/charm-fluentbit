@@ -1,0 +1,9 @@
+options:
+  custom-config:
+    type: string
+    default: ""
+    description: >
+      Add a custom configuration for inputs, parsers, filters, and outputs.
+
+      It must be a Json encoded list of dictionaries, example:
+      TODO

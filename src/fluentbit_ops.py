@@ -175,15 +175,16 @@ class FluentbitOps:
 
         # separate input, output, and filter from parser and parser_multiline
         for entry in cfg:
-            if entry.keys[0].lower() == "input":
+            key = list(entry.keys())[0].lower()
+            if key == "input":
                 ctxt["inputs"].append(entry["input"])
-            elif entry.keys[0].lower() == "filter":
-                ctxt["filters"].append(entry["filter"])
-            elif entry.keys[0].lower() == "output":
-                ctxt["outputs"].append(entry["output"])
-            elif entry.keys[0].lower() == "parser":
-                ctxt["parsers"].append(entry["parser"])
-            elif entry.keys[0].lower() == "multiline_parser":
+            elif key == "filter":
+                ctxt["filter"].append(entry["filter"])
+            elif key == "output":
+                ctxt["output"].append(entry["output"])
+            elif key == "parser":
+                ctxt["parser"].append(entry["parser"])
+            elif key == "multiline_parer":
                 ctxt["multiline_parsers"].append(entry["multiline_parser"])
 
         self._render_configs(ctxt)

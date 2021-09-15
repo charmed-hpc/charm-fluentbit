@@ -11,6 +11,7 @@ import json
 from typing import List
 
 from ops.framework import EventBase, EventSource, Object, ObjectEvents, StoredState
+from ops.model import Relation
 
 # The unique Charmhub library identifier, never change it
 LIBID = "e7b5ae1460034b9fb67cd4ec6aa3e87f"
@@ -55,7 +56,7 @@ class FluentbitProvider(Object):
         self.charm = charm
         self._relation_name = relation_name
 
-        self._state.set_default(cfg=list())
+        self._state.set_default(cfg=str())
 
         events = self.charm.on[relation_name]
         self.framework.observe(events.relation_changed, self._on_relation_changed)
@@ -69,13 +70,13 @@ class FluentbitProvider(Object):
         # TODO this only works for 1 relation, should extend for any number of
         #      relations, so it can support multiple outputs easily
         if cfg:
-            self._state.cfg = json.loads(cfg)
+            self._state.cfg = cfg
             self.on.configuration_available.emit()
 
     @property
     def configuration(self) -> List[dict]:
         """Get the stored configuration."""
-        cfg = list(self._state.cfg).copy()
+        cfg = json.loads(self._state.cfg)
         logger.debug(f"## Fluentbit stored configuration: {cfg}")
         return cfg
 
@@ -123,3 +124,8 @@ class FluentbitClient(Object):
         # should we validate the input? how?
         logging.debug(f"## Seding configuration data to Fluentbit: {cfg}")
         self._relation.data[self.model.unit]["configuration"] = json.dumps(cfg)
+
+    @property
+    def _relation(self) -> Relation:
+        """Return the relation."""
+        return self.framework.model.get_relation(self._relation_name)

@@ -2,6 +2,7 @@
 """FluentbitCharm."""
 
 import logging
+import json
 from pathlib import Path
 
 from ops.charm import CharmBase
@@ -68,14 +69,21 @@ class FluentbitCharm(CharmBase):
 
     def _on_config_changed(self, event):
         """Handle configuration updates."""
-        logger.debug("## TODO Configuring charm")
-        # TODO
-        #   - assemble charm config
-        #   - assemble input, parsers, outputs
-        #   - assemble parsers
-        #   - restart daemon
+        logger.debug("## Configuring charm")
+
         cfg = self._fluentbit_provider.configuration
-        self._fluentbit.configure(cfg)
+        charm_config = self.model.config.get("custom-config", "[]")
+
+        try:
+            charm_configs = json.loads(charm_config)
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid Json for custom-config: {e}")
+            charm_configs = []
+
+        logger.debug(f"## config-changed: relation configs: {cfg}.")
+        logger.debug(f"## config-changed: charm configs: {charm_configs}.")
+
+        self._fluentbit.configure(cfg + charm_configs)
         self._check_status()
 
     def _on_start(self, event):

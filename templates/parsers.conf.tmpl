@@ -17,14 +17,14 @@
 
 {% for parser in parsers %}
 [PARSER]
-    {% for key, value in parser.items() %}
-    {{key}}  {{value}}
+    {%- for line in parser %}
+    {% for item in line%}{{ item }} {% endfor %}
     {%- endfor %}
 {%- endfor %}
 
 {% for parser in multiline_parsers %}
 [MULTILINE_PARSER]
-    {% for key, value in parser.items() %}
-    {{key}}  {{value}}
+    {%- for line in parser %}
+    {% for item in line%}{{ item }} {% endfor %}
     {%- endfor %}
 {%- endfor %}

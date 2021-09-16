@@ -179,12 +179,12 @@ class FluentbitOps:
             if key == "input":
                 ctxt["inputs"].append(entry["input"])
             elif key == "filter":
-                ctxt["filter"].append(entry["filter"])
+                ctxt["filters"].append(entry["filter"])
             elif key == "output":
-                ctxt["output"].append(entry["output"])
+                ctxt["outputs"].append(entry["output"])
             elif key == "parser":
-                ctxt["parser"].append(entry["parser"])
-            elif key == "multiline_parer":
+                ctxt["parsers"].append(entry["parser"])
+            elif key == "multiline_parser":
                 ctxt["multiline_parsers"].append(entry["multiline_parser"])
 
         self._render_configs(ctxt)

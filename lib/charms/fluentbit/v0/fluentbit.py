@@ -3,7 +3,6 @@
 To ship logs from your charm to a centralized place using Fluentbit,
 instantiate the `FluentbitClient()` class and relate your charm to Fluentbit
 charm.
-
 """
 
 import logging
@@ -68,7 +67,7 @@ class FluentbitProvider(Object):
         cfg = event.relation.data[event.unit].get("configuration")
         logger.debug(f"## relation-changed: received: {cfg}")
         # TODO this only works for 1 relation, should extend for any number of
-        #      relations, so it can support multiple outputs easily
+        #      relations, so it can support multiple outputs easily?
         if cfg:
             self._state.cfg = cfg
             self.on.configuration_available.emit()
@@ -109,17 +108,16 @@ class FluentbitClient(Object):
 
         Arguments:
             cfg: a list of stuff to setup. Example:
-                [{"input": {"name": "gelf",
-                            "path": "/var/log/foo.log",
-                            "path_key": "filename",
-                            "tag": "foo",
-                            "parser": "foo"}},
-                 {"parser": {"name": "foo",
-                             "format": "regex",
-                             "regex": "^\[(?<time>[^\]]*)\] (?<message>.*)$",
-                             "time_key": "time",
-                             "time_format": "%Y-%m-%dT%H:%M:%S.%L"}},
-                ]
+                [{"input": [("name",     "tail"),
+                            ("path",     "/var/log/slurm/slurmd.log"),
+                            ("path_key", "filename"),
+                            ("tag",      "slurmd"),
+                            ("parser",   "slurm")]},
+                 {"parser": [("name",        "slurm"),
+                             ("format",      "regex"),
+                             ("regex",       "^\[(?<time>[^\]]*)\] (?<message>.*)$"),
+                             ("time_key",    "time"),
+                             ("time_format", "%Y-%m-%dT%H,%M,%S.%L")]},
         """
         # should we validate the input? how?
         logging.debug(f"## Seding configuration data to Fluentbit: {cfg}")

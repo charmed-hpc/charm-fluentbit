@@ -75,7 +75,7 @@ class FluentbitCharm(CharmBase):
         charm_config = self.model.config.get("custom-config", "[]")
 
         try:
-            charm_configs = json.loads(charm_config)
+            charm_configs = json.loads(charm_config or '[]')
         except json.JSONDecodeError as e:
             logger.error(f"Invalid Json for custom-config: {e}")
             charm_configs = []

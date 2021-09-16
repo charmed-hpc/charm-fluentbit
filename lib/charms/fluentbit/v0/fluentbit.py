@@ -75,7 +75,7 @@ class FluentbitProvider(Object):
     @property
     def configuration(self) -> List[dict]:
         """Get the stored configuration."""
-        cfg = json.loads(self._state.cfg)
+        cfg = json.loads(self._state.cfg or '[]')
         logger.debug(f"## Fluentbit stored configuration: {cfg}")
         return cfg
 

@@ -1,4 +1,4 @@
-"""Fluentbit charm libraries.
+r"""Fluentbit charm libraries.
 
 This library contains two main classes: `FluentbitProvider` and
 `FluentbitClient`. `FluentbitProvider` class is instantiated in the Fluentbit

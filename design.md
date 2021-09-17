@@ -105,8 +105,8 @@ cfg = [{"input": [("name",     "tail"),
        {"multiline_parser": [("name",          "nhc"),
                              ("format",        "regex"),
                              ("flush_timeout", "1000"),
-                             ("rule",          '"start_state" "/^([\d]{8} [\d:]*) (.*)/" "cont"'),
-                             ("rule",          '"cont"        "/^([^\d].*)/"             "cont"')]}]
+                             ("rule",          '"start_state"', '"/^([\d]{8} [\d:]*) (.*)/"', '"cont"'),
+                             ("rule",          '"cont"',        '"/^([^\d].*)/"',             '"cont"')]}]
 ```
 
 Why not a list of `defaultdict(list)`? IMO, using "obscure" (in the sense that

@@ -1,8 +1,68 @@
 """Fluentbit charm libraries.
 
-To ship logs from your charm to a centralized place using Fluentbit,
-instantiate the `FluentbitClient()` class and relate your charm to Fluentbit
-charm.
+This library contains two main classes: `FluentbitProvider` and
+`FluentbitClient`. `FluentbitProvider` class is instantiated in the Fluentbit
+Server charm, and receives configuration data through a relation to other
+charms. `FluentbitClient` class should be instantiated in any charm that wants
+to ship logs via Fluentbit.
+
+## Forwarding logs using Fluentbit
+
+To forward logs from your charm to a centralized place using Fluentbit,
+instantiate the `FluentbitClient()` class and handle the `relation_created`
+event in your main charm code. In this event, your charm must pass all the
+configuration parameters necessary to configure Fluentbit: the inputs, the
+parsers, and the filters.
+
+For example:
+
+```python
+class MyCharm(CharmBase):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        self._fluentbit = FluentbitClient(self, "fluentbit")
+
+        self.framework.observe(self.on.fluentbit.relation_created,
+                               self._fluentbit_relation_created)
+
+    def _fluentbit_relation_created(self, event):
+        cfg = [{"input": [("name",     "tail"),
+                          ("path",     "/var/log/foo/bar.log"),
+                          ("path_key", "filename"),
+                          ("tag",      "foo"),
+                          ("parser",   "bar")]},
+               {"parser": [("name",        "bar"),
+                           ("format",      "regex"),
+                           ("regex",       "^\[(?<time>[^\]]*)\] (?<log>.*)$"),
+                           ("time_key",    "time"),
+                           ("time_format", "%Y-%m-%dT%H,%M,%S.%L")]}]
+        self._fluentbit.configure(cfg)
+```
+
+The configuration object must be a list of dictionaries. Each dictionary must
+contain one key. The key must be the section of Fluentbit's processing
+pipeline. Valid ones are:
+- `input`
+- `filter`
+- `parser`
+- `multiline_parser`
+- `output`
+
+The value of each key must be a list of all configuration entries. Each entry
+is a tuple (or list) of values to be rendered in the configuration files.
+
+## FluentbitProvider class
+
+This class receives the configuration data and forwards to the Fluentbit Charm,
+to rewrite the configuration files and restart the service. This class should
+only be instantiated by Fluentbit Charm.
+
+## Caveats
+
+The charm do not validate the configuration files before restarting the
+service. It is the charm author's responsibility to ensure the configuration is
+correct.
 """
 
 import logging

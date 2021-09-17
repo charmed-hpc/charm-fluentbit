@@ -1,6 +1,5 @@
 name: fluentbit
-description: >
-    Fluentbit machine charm.
+description: Fluentbit machine charm.
 summary: >
     Fluentbit is a high-performance log processor and forwarder.
 maintainers:
@@ -17,4 +16,3 @@ requires:
 provides:
     fluentbit:
         interface: fluentbit
-        scope: container

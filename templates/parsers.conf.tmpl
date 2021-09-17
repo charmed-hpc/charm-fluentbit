@@ -1,20 +1,6 @@
 # Configuration file for parsers.
 # This file is generated automatically by the charm, do not edit manually
 
-#[PARSER]
-#    Name        slurm
-#    Format      regex
-#    Regex       ^\[(?<time>[^\]]*)\] (?<message>.*)$
-#    Time_Key    time
-#    Time_Format %Y-%m-%dT%H:%M:%S.%L
-#
-#[MULTILINE_PARSER]
-#    Name               nhc
-#    Type               regex
-#    Flush_timeout      1000
-#    Rule "start_state" "/^([\d]{8} [\d:]*) (.*)/" "cont"
-#    Rule "cont"        "/^([^\d].*)/"             "cont"
-
 {% for parser in parsers %}
 [PARSER]
     {%- for line in parser %}

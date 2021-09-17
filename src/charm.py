@@ -41,7 +41,7 @@ class FluentbitCharm(CharmBase):
         self.framework.observe(self.on.remove, self._on_remove)
         self.framework.observe(self.on.update_status, self._on_update_status)
 
-        # TODO handle fluentbit relation event and configure and restart it
+        # handle fluentbit relation event and configure and restart it
         self.framework.observe(self._fluentbit_provider.on.configuration_available,
                                self._on_config_changed)
 
@@ -97,7 +97,7 @@ class FluentbitCharm(CharmBase):
         self._fluentbit.stop()
 
     def _on_remove(self, event):
-        logger.debug("## TODO Uninstalling Fluentbit")
+        logger.debug("## Uninstalling Fluentbit")
         self._fluentbit.uninstall()
 
     def _on_update_status(self, event):

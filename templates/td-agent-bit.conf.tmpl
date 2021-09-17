@@ -86,38 +86,7 @@
     # storage.backlog.mem_limit 5M
 
 
-# inputs, filters, and outputs
-#[INPUT]
-#    name     tail
-#    path     /var/log/slurm/slurmd.log
-#    path_key filename
-#    tag      slurmd
-#    parser   slurm
-#
-#[OUTPUT]
-#    Name                   gelf
-#    Match                  slurmd
-#    Host                   10.220.130.119
-#    Port                   12201
-#    Mode                   udp
-#    Gelf_Short_Message_Key message
-#
-#
-#[INPUT]
-#    name             tail
-#    path             /var/log/nhc.log
-#    path_key         filename
-#    tag              nhc
-#    multiline.parser nhc
-#
-#[OUTPUT]
-#    Name                    gelf
-#    Match                   nhc
-#    Host                    10.220.130.119
-#    Port                    12201
-#    Mode                    udp
-#    Gelf_Short_Message_Key  log
-
+# custom inputs, filters, and outputs
 {% for input in inputs %}
 [INPUT]
     {%- for line in input %}

@@ -2,5 +2,5 @@
 name = TD Agent Bit
 baseurl = https://packages.fluentbit.io/centos/7/$basearch/
 gpgcheck=1
-gpgkey=https://packages.fluentbit.io/fluentbit.key
+gpgkey=file:///var/tmp/fluentbit.key
 enabled=1

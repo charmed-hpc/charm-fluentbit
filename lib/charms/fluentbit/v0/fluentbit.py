@@ -60,7 +60,7 @@ only be instantiated by Fluentbit Charm.
 
 ## Caveats
 
-The charm do not validate the configuration files before restarting the
+The charm does not validate the configuration files before restarting the
 service. It is the charm author's responsibility to ensure the configuration is
 correct.
 """

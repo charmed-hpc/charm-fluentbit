@@ -85,6 +85,9 @@ class FluentbitOps:
 
         try:
             logger.debug("## Installing fluentbit")
+            key = self._template_dir / "fluentbit.key"
+            shutil.copy(key, "/var/tmp/")
+
             cmd = "yum install --assumeyes td-agent-bit"
             subprocess.check_output(shlex.split(cmd))
 

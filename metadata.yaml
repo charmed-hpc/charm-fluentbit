@@ -16,3 +16,4 @@ requires:
 provides:
     fluentbit:
         interface: fluentbit
+        scope: container

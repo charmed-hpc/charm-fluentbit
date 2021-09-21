@@ -12,3 +12,4 @@ Final checklist
 - [ ] I am the author of these changes, or I have the rights to submit them.
 - [ ] I added the relevant changed to the README and/or documentation.
 - [ ] I self reviewed my own code.
+- [ ] I updated the CHANGELOG.

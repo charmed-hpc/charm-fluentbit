@@ -61,6 +61,9 @@ To deploy the locally built charm:
 $ juju deploy ./fluentbit_ubuntu-20.04-amd64_centos-7-amd64.charm
 ```
 
+When finishing a pull request, update the [CHANGELOG](changelog.md) with a
+brief description of the changes.
+
 ## Contact
 
 **We want to hear from you!**

@@ -48,8 +48,8 @@ class FluentbitCharm(CharmBase):
     def _on_install(self, event):
         logger.debug("## Installing charm")
         self.unit.status = MaintenanceStatus("Installing Fluentbit")
-        if self.model.unit.is_leader():
-            self.unit.set_workload_version(VERSION)
+        # subordinate charms do not have a leader.
+        self.unit.set_workload_version(VERSION)
 
         if self._fluentbit.install():
             self.unit.status = ActiveStatus("Fluentbit installed")
@@ -62,8 +62,7 @@ class FluentbitCharm(CharmBase):
         """Perform charm upgrade operations."""
         logger.debug("## Upgrading charm")
         self.unit.status = MaintenanceStatus("Upgrading Fluentbit")
-        if self.model.unit.is_leader():
-            self.unit.set_workload_version(VERSION)
+        self.unit.set_workload_version(VERSION)
 
         self.unit.status = ActiveStatus("Fluentbit upgraded")
 

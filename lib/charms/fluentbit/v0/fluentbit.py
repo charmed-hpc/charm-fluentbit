@@ -52,6 +52,16 @@ pipeline. Valid ones are:
 The value of each key must be a list of all configuration entries. Each entry
 is a tuple (or list) of values to be rendered in the configuration files.
 
+Your charm's `metadata.yaml` should have the Fluentbit relation entry in the
+`requires` section:
+
+```
+requires:
+      fluentbit:
+          interface: fluentbit
+```
+
+
 ## FluentbitProvider class
 
 This class receives the configuration data and forwards to the Fluentbit Charm,
@@ -80,7 +90,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 1
+LIBPATCH = 2
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +144,11 @@ class FluentbitProvider(Object):
 
     @property
     def configuration(self) -> List[dict]:
-        """Get the stored configuration."""
+        """Get the stored configuration.
+
+        Returns:
+            list of dictionaries with the configuration parameters.
+        """
         cfg = json.loads(self._state.cfg or '[]')
         logger.debug(f"## Fluentbit stored configuration: {cfg}")
         return cfg

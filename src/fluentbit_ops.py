@@ -58,7 +58,7 @@ class FluentbitOps:
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Installing fluentbit")
-            cmd = "apt-get install --yes td-agent-bit"
+            cmd = "apt-get install --yes td-agent-bit=1.8.15"
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Fluentbit installed")
@@ -88,7 +88,7 @@ class FluentbitOps:
             key = self._template_dir / "fluentbit.key"
             shutil.copy(key, "/var/tmp/")
 
-            cmd = "yum install --assumeyes td-agent-bit"
+            cmd = "yum install --assumeyes td-agent-bit-1.8.15"
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Fluentbit installed")

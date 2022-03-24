@@ -8,3 +8,6 @@ bases:
       channel: "20.04"
     - name: "centos"
       channel: "7"
+parts:
+  charm:
+    charm-python-packages: [setuptools]

@@ -33,32 +33,40 @@ class FluentbitOps:
         """
         os_ = operating_system()
         if "ubuntu" == os_[0]:
-            return self._install_on_ubuntu()
+            return self._install_on_ubuntu(ubuntu_version=os_[1])
         elif "centos" == os_[0] or "rocky" == os_[0]:
             return self._install_on_centos()
         else:
             logger.error(f"## Unsupported operating system: {os_}")
             return False
 
-    def _install_on_ubuntu(self) -> bool:
-        """Install fluentbit on Ubuntu 20.04.
+    def _install_on_ubuntu(self, ubuntu_version: str) -> bool:
+        """Install fluentbit on Ubuntu.
 
         Returns:
             bool: whether the installation was succesfull or not
         """
         logger.debug("## Configuring APT to install fluentbit on Ubuntu")
 
+        if ubuntu_version == "20.04":
+            repo = "deb https://packages.fluentbit.io/ubuntu/focal focal main"
+            package_version = "1.8.15"
+        elif ubuntu_version == "22.04":
+            repo = "deb https://packages.fluentbit.io/ubuntu/jammy jammy main"
+            package_version = "1.9.10"
+        else:
+            raise ValueError("Ubuntu version not supported.")
+
         try:
             key = self._template_dir / "fluentbit.key"
             cmd = f"apt-key add {key.as_posix()}"
             subprocess.check_output(shlex.split(cmd))
 
-            repo = "deb https://packages.fluentbit.io/ubuntu/focal focal main"
             cmd = f'add-apt-repository "{repo}"'
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Installing fluentbit")
-            cmd = "apt-get install --yes td-agent-bit=1.8.15"
+            cmd = f"apt-get install --yes td-agent-bit={package_version}"
             subprocess.check_output(shlex.split(cmd))
 
             logger.debug("## Fluentbit installed")
@@ -142,19 +150,26 @@ class FluentbitOps:
         """
         os_ = operating_system()
         if "ubuntu" == os_[0]:
-            self._uninstall_on_ubuntu()
-        elif "centos" == os_[0]:
+            self._uninstall_on_ubuntu(ubuntu_version=os_[1])
+        elif "centos" == os_[0] or "rocky" == os_[0]:
             self._uninstall_on_centos()
         else:
             logger.error(f"## Unsupported operating system: {os_}")
 
-    def _uninstall_on_ubuntu(self):
+    def _uninstall_on_ubuntu(self, ubuntu_version):
         logger.debug("## Removing fluentbit package")
         cmd = "apt-get purge --yes td-agent-bit"
         subprocess.check_output(shlex.split(cmd))
 
         logger.debug("## Removing fluentbit repository")
-        repo = "deb https://packages.fluentbit.io/ubuntu/focal focal main"
+
+        if ubuntu_version == "20.04":
+            repo = "deb https://packages.fluentbit.io/ubuntu/focal focal main"
+        elif ubuntu_version == "22.04":
+            repo = "deb https://packages.fluentbit.io/ubuntu/jammy jammy main"
+        else:
+            raise ValueError("Ubuntu version not supported.")
+
         cmd = f'add-apt-repository --remove "{repo}"'
         subprocess.check_output(shlex.split(cmd))
 

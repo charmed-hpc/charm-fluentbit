@@ -1,0 +1,18 @@
+#!/bin/bash
+# This hook installs the centos dependencies needed to run the charm.
+
+set -e
+
+# Source the os-release information into the env.
+. /etc/os-release
+
+if ! [[ -f '.installed' ]]; then
+    # Determine if we are running in ubuntu
+    if [[ $ID == 'ubuntu' && $VERSION_ID == '22.04' ]]; then 
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb -P /tmp
+        apt install /tmp/libssl1.1_1.1.1f-1ubuntu2_amd64.deb    
+    fi
+    touch .installed
+fi
+
+JUJU_DISPATCH_PATH="${JUJU_DISPATCH_PATH:-$0}" PYTHONPATH=lib:venv ./src/charm.py

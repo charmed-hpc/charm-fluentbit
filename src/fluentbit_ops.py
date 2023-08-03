@@ -34,7 +34,7 @@ class FluentbitOps:
         os_ = operating_system()
         if "ubuntu" == os_[0]:
             return self._install_on_ubuntu()
-        elif "centos" == os_[0]:
+        elif "centos" == os_[0] or "rocky" == os_[0]:
             return self._install_on_centos()
         else:
             logger.error(f"## Unsupported operating system: {os_}")

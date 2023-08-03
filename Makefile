@@ -9,7 +9,7 @@ lint: ## Run linter
 
 .PHONY: version
 version: ## Create/update version file
-	@git describe --dirty --tags > version
+	@git describe --dirty --tags --always > version
 
 .PHONY: clean
 clean: ## Remove build dirs, temp files, and charms
@@ -21,3 +21,4 @@ clean: ## Remove build dirs, temp files, and charms
 .PHONY: charm
 charm: version ## Pack the charm
 	@charmcraft pack
+	@mv fluentbit_*.charm fluentbit.charm

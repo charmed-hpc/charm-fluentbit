@@ -4,6 +4,8 @@ This file keeps track of all notable changes to the Fluentbit Charm.
 
 ## Unreleased
 
+- add support for Rocky Linux and Ubuntu Jammy
+
 ## 0.2.0 - 2022-03-24
 
 - pin fluentbit to 1.8.15

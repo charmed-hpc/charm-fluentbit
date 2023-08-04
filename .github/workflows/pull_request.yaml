@@ -7,10 +7,10 @@ jobs:
         name: "Run linter"
         runs-on: "ubuntu-latest"
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v2
+            - uses: actions/checkout@v3
+            - uses: actions/setup-python@v3
               with:
-                  python-version: '3.6'
+                  python-version: '3.x'
                   architecture: 'x64'
             - name: "Install flake8 and flake8-docstrings"
               run: |
@@ -25,24 +25,13 @@ jobs:
         needs: lint-charm
         runs-on: "ubuntu-latest"
         steps:
-            - uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Setup operator environment
+              uses: charmed-kubernetes/actions-operator@main
               with:
-                  fetch-depth: 0
-            - name: "Install charmcraft"
-              run: |
-                  sudo snap install charmcraft --channel=latest/stable --classic
-            - name: "Install lxd"
-              run: |
-                  sudo snap install lxd --channel=latest/stable
-                  sudo snap refresh lxd
-            - name: "Configure lxd"
-              run: |
-                  sudo groupadd --force --system lxd
-                  sudo usermod --append --groups lxd $USER
-                  newgrp lxd
-                  sudo snap start lxd
-                  sudo lxd waitready --timeout=30
-                  sudo lxd init --auto
+                provider: lxd
+                juju-channel: 3.1/stable
             - name: "Build the charms"
               shell: bash
               run: |
